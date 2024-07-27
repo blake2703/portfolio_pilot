@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-import pandas_ta
 import yfinance as yf
 from datetime import datetime, timedelta
 
@@ -39,7 +38,7 @@ def scrape(run: bool):
                             data_dict[key] = td_elements[i].text.strip()
                     data_list.append(data_dict)
         df = pd.DataFrame.from_dict(data_list)
-        df.to_csv('data.csv')
+        return df
     return None
 
 
@@ -61,9 +60,5 @@ def get_prices(df):
     data = yf.download(tickers=ticker_list, start=datetime.today() - timedelta(days=365), end=datetime.today())
     data = data.stack().reset_index().rename(index=str, columns={"level_1": "Ticker"}).sort_values(['Ticker', 'Date'])
     data.set_index('Date', inplace=True)
-    data.to_csv('prices.csv')
+    return data
 
-# scrape(run=False)
-# data = pd.read_csv('/Users/blakedickerson/portfolio_pilot/data.csv')
-# data = preprocess(data)
-# get_prices(data)
