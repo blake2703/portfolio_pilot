@@ -49,6 +49,7 @@ class Rsi2(Strategy):
         self.prices = self.prices[self.prices['Ticker'].isin(ticker_names)]
         
         self.prices = self.prices.groupby('Ticker').apply(self.add_ta)
+        self.prices['Date'] = pd.to_datetime(self.prices['Date'])
         self.prices = self.prices.dropna()
         
         self.prices['at_donchian_upper'] = self.prices['High'] >= self.prices['donchian_upper']
@@ -57,6 +58,7 @@ class Rsi2(Strategy):
         
         self.prices['above_70_rsi2'] = self.prices['rsi2'] >= 70
         self.prices['sell_signal'] = False
+        
         
         
     def buy_signal(self):        
@@ -78,10 +80,10 @@ class Rsi2(Strategy):
                     if ticker_data.loc[day, 'below_30_rsi2']:
                         self.prices.loc[day, 'buy_signal'] = True
                         break  # Exit the loop once a buy signal is found
-        self.prices.to_csv('buys.csv')
         
         
-raw_data = pd.read_csv('/Users/blakedickerson/portfolio_pilot/data.csv')
-prices = pd.read_csv('/Users/blakedickerson/portfolio_pilot/prices.csv')
+scraped_etfs = pd.read_csv('/Users/blakedickerson/portfolio_pilot/data.csv')
+scraped_etf_prices = get_prices(scraped_etfs)
 
-a = Rsi2(raw_data, prices)        
+a = Rsi2(data=scraped_etfs, prices=scraped_etf_prices)
+a.send_alert()
