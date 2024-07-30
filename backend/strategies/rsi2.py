@@ -81,7 +81,7 @@ class Rsi2(Strategy):
                         self.prices.loc[day, 'buy_signal'] = True
                         break  # Exit the loop once a buy signal is found
         
-        
+
 scraped_etfs = pd.read_csv('/Users/blakedickerson/portfolio_pilot/data.csv')
 scraped_etf_prices = get_prices(scraped_etfs)
 
