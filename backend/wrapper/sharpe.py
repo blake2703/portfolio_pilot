@@ -3,8 +3,6 @@ import numpy as np
 import scipy
 from wrapper.metrics import Metrics
 
-import scipy.optimize
-
 class Sharpe(Metrics):
 
     def optimize(self):
